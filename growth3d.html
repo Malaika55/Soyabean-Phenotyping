@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D Growth – Soybean AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .section-badge { background:rgba(25,135,84,.12); color:#198754; border:1px solid rgba(25,135,84,.25); border-radius:50px; padding:.35rem 1rem; font-size:.82rem; font-weight:600; display:inline-block; margin-bottom:.75rem; }
+    /* 3D scene */
+    .scene-wrap { background:linear-gradient(180deg,#0a1a0f 0%,#0d2b1a 60%,#1a3a22 100%); border-radius:24px; padding:2rem; min-height:500px; position:relative; overflow:hidden; }
+    .scene-wrap::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 0%,rgba(25,135,84,.25),transparent 70%); pointer-events:none; }
+    .ground { position:absolute; bottom:0; left:0; right:0; height:80px; background:linear-gradient(0deg,#1a3a0a,#2d5a1b); border-radius:0 0 24px 24px; }
+    .ground::before { content:''; position:absolute; inset:0; background:repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(255,255,255,.03) 40px,rgba(255,255,255,.03) 41px); }
+    /* Plant stages */
+    .plant-stage { display:flex; flex-direction:column; align-items:center; cursor:pointer; transition:all .3s; }
+    .plant-stage:hover { transform:scale(1.08); }
+    .plant-stage.active-stage .stem { box-shadow:0 0 20px rgba(32,201,151,.6); }
+    .stem { width:6px; background:linear-gradient(0deg,#2d6a1e,#4caf50); border-radius:3px; transition:all .8s ease; position:relative; }
+    .leaf-pair { display:flex; gap:4px; justify-content:center; margin-bottom:2px; }
+    .leaf-svg { width:22px; height:14px; }
+    .pod { width:8px; height:18px; background:linear-gradient(180deg,#8bc34a,#4caf50); border-radius:50% 50% 50% 50%/60% 60% 40% 40%; margin:1px; }
+    .pods-row { display:flex; gap:3px; margin-bottom:2px; }
+    .stage-label { color:rgba(255,255,255,.85); font-size:.78rem; font-weight:600; margin-top:.6rem; text-align:center; }
+    .stage-num { width:28px;height:28px; background:rgba(255,255,255,.12); border-radius:50%; display:flex;align-items:center;justify-content:center; color:#fff; font-size:.75rem; font-weight:700; margin:0 auto .4rem; border:1.5px solid rgba(255,255,255,.2); }
+    .active-stage .stage-num { background:#198754; border-color:#20c997; }
+    /* Info panel */
+    .info-panel { background:#fff; border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,.1); }
+    .timeline-dot { width:14px;height:14px; background:#198754; border-radius:50%; border:3px solid #fff; box-shadow:0 0 0 3px rgba(25,135,84,.2); }
+    .timeline-line { width:2px; background:#e2e8f0; flex:1; min-height:30px; }
+    .stage-tab { border-radius:12px; border:2px solid #e2e8f0; padding:.6rem 1rem; cursor:pointer; transition:all .25s; font-size:.9rem; }
+    .stage-tab:hover,.stage-tab.active { background:#198754; color:#fff; border-color:#198754; }
+    .metric-bar { height:8px; border-radius:10px; background:#e9ecef; overflow:hidden; }
+    .metric-fill { height:100%; border-radius:10px; background:linear-gradient(90deg,#198754,#20c997); transition:width 1s ease; }
+    .chart-wrap { background:#fff; border-radius:20px; box-shadow:0 8px 30px rgba(0,0,0,.08); padding:1.5rem; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-md navbar-dark sticky-top custom-navbar">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html"><img src="images/Capture.PNG" alt="Logo" class="pill-rounded" style="height:50px;" /></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu"><span class="navbar-toggler-icon"></span></button>
+    <div class="d-none d-md-flex w-100 align-items-center">
+      <ul class="navbar-nav d-flex mx-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="upload.html">Upload</a></li>
+        <li class="nav-item"><a class="nav-link" href="comparison.html">Comparison</a></li>
+        <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
+        <li class="nav-item"><a class="nav-link active" href="growth3d.html">3D Growth</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+      </ul>
+      <form class="d-flex ms-auto"><input class="form-control me-2" type="search" placeholder="Search" /><button class="btn btn-outline-light">Search</button></form>
+    </div>
+  </div>
+</nav>
+<div class="offcanvas offcanvas-end text-bg-success" tabindex="-1" id="mobileMenu">
+  <div class="offcanvas-header"><h5 class="offcanvas-title">Menu</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button></div>
+  <div class="offcanvas-body">
+    <ul class="navbar-nav">
+      <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+      <li class="nav-item"><a class="nav-link" href="upload.html">Upload</a></li>
+      <li class="nav-item"><a class="nav-link" href="comparison.html">Comparison</a></li>
+      <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
+      <li class="nav-item"><a class="nav-link active" href="growth3d.html">3D Growth</a></li>
+      <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+      <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+    </ul>
+  </div>
+</div>
+
+<!-- PAGE HEADER -->
+<section style="min-height:280px; background:linear-gradient(135deg,#198754 0%,#0d6b3f 100%); position:relative; overflow:hidden;" class="d-flex align-items-center">
+  <div class="floating-leaf leaf-1"><i class="fas fa-leaf"></i></div>
+  <div class="floating-leaf leaf-2"><i class="fas fa-leaf"></i></div>
+  <div class="container text-white text-center position-relative" style="z-index:2;">
+    <div class="section-badge" style="background:rgba(255,255,255,.2);color:#fff;border-color:rgba(255,255,255,.3);">
+      <i class="fas fa-cube me-2"></i>3D Visualization
+    </div>
+    <h1 class="display-4 fw-bold mb-3">3D Growth Visualization</h1>
+    <p class="lead opacity-90 mb-0">Interactive soybean plant growth stages from seedling to full maturity</p>
+  </div>
+</section>
+
+<!-- CONTROLS -->
+<section class="py-4 bg-light">
+  <div class="container">
+    <div class="d-flex flex-wrap gap-3 align-items-center justify-content-center">
+      <label class="fw-semibold text-success me-2"><i class="fas fa-filter me-1"></i>Variety:</label>
+      <select class="form-select form-select-sm rounded-pill" style="width:auto;" id="varietySelect" onchange="updatePlant()">
+        <option>Williams 82</option><option>Forrest</option><option>Braxton</option><option>Davis</option>
+      </select>
+      <label class="fw-semibold text-success me-2">Speed:</label>
+      <select class="form-select form-select-sm rounded-pill" style="width:auto;" id="speedSelect">
+        <option value="2000">Slow</option><option value="1200" selected>Normal</option><option value="600">Fast</option>
+      </select>
+      <button class="btn btn-success rounded-pill px-3" id="playBtn" onclick="toggleAnimation()">
+        <i class="fas fa-play me-2" id="playIcon"></i>Auto Play
+      </button>
+      <button class="btn btn-outline-secondary rounded-pill px-3" onclick="resetStage()">
+        <i class="fas fa-undo me-2"></i>Reset
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- 3D SCENE + INFO -->
+<section class="py-5 bg-white">
+  <div class="container">
+    <div class="row g-4">
+      <!-- Scene -->
+      <div class="col-lg-8">
+        <div class="scene-wrap">
+          <div class="text-center text-white mb-3 position-relative" style="z-index:2;">
+            <small class="opacity-75">Click any stage to inspect • Use Auto Play to animate</small>
+          </div>
+          <div class="d-flex justify-content-around align-items-end position-relative" style="min-height:360px; z-index:2;" id="plantScene">
+            <!-- Plants built by JS -->
+          </div>
+          <div class="ground"></div>
+        </div>
+
+        <!-- Stage selector tabs -->
+        <div class="d-flex flex-wrap gap-2 mt-3 justify-content-center" id="stageTabs"></div>
+      </div>
+
+      <!-- Info panel -->
+      <div class="col-lg-4">
+        <div class="info-panel p-4" id="infoPanel">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div style="width:48px;height:48px; background:linear-gradient(135deg,#198754,#20c997); border-radius:12px; display:flex;align-items:center;justify-content:center; font-size:1.4rem; color:#fff;">
+              <i class="fas fa-seedling" id="stageIcon"></i>
+            </div>
+            <div>
+              <h5 class="fw-bold text-success mb-0" id="stageName">Select a Stage</h5>
+              <small class="text-muted" id="stageDays">—</small>
+            </div>
+          </div>
+          <p class="text-muted small" id="stageDesc">Click on any plant stage in the 3D scene or use the tabs below to explore growth information.</p>
+          <hr>
+          <h6 class="fw-bold text-success mb-3">Growth Metrics</h6>
+          <div class="mb-3">
+            <div class="d-flex justify-content-between mb-1"><span class="small">Height</span><span class="small fw-bold text-success" id="mHeight">—</span></div>
+            <div class="metric-bar"><div class="metric-fill" id="fHeight" style="width:0%"></div></div>
+          </div>
+          <div class="mb-3">
+            <div class="d-flex justify-content-between mb-1"><span class="small">Leaf Area Index</span><span class="small fw-bold text-success" id="mLAI">—</span></div>
+            <div class="metric-bar"><div class="metric-fill" id="fLAI" style="width:0%"></div></div>
+          </div>
+          <div class="mb-3">
+            <div class="d-flex justify-content-between mb-1"><span class="small">Chlorophyll Level</span><span class="small fw-bold text-success" id="mChl">—</span></div>
+            <div class="metric-bar"><div class="metric-fill" id="fChl" style="width:0%"></div></div>
+          </div>
+          <div class="mb-3">
+            <div class="d-flex justify-content-between mb-1"><span class="small">Pod Development</span><span class="small fw-bold text-success" id="mPod">—</span></div>
+            <div class="metric-bar"><div class="metric-fill" id="fPod" style="width:0%"></div></div>
+          </div>
+          <div class="mt-3 pt-3 border-top">
+            <h6 class="fw-bold text-success mb-2">Recommended Actions</h6>
+            <ul class="list-unstyled mb-0 small text-muted" id="actions">
+              <li><i class="fas fa-circle text-success me-2" style="font-size:.5rem;"></i>Select a stage to view recommendations</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GROWTH CHART -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="text-center mb-4">
+      <div class="section-badge"><i class="fas fa-chart-line me-1"></i>Growth Analytics</div>
+      <h2 class="fw-bold text-success">Growth Progression Over Time</h2>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="growthLine" height="100"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer-section">
+  <div class="container">
+    <div class="footer-bottom py-4">
+      <div class="row align-items-center">
+        <div class="col-md-6 text-center text-md-start"><p class="mb-0 text-muted">&copy; 2024 Soybean AI. All Rights Reserved.</p></div>
+        <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
+          <a href="index.html" class="footer-link">Home</a><span class="mx-2 text-muted">|</span>
+          <a href="contact.html" class="footer-link">Contact</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const STAGES = [
+    { id:0, name:'Germination', code:'VE', days:'Days 0–7',  icon:'fas fa-circle', stemH:20, leaves:0, pods:0, desc:'Seed absorbs water and the radicle emerges from the seed coat. The seedling pushes through the soil surface.', height:'3 cm', heightP:5, lai:'0.1', laiP:5, chl:'20%', chlP:20, podP:0, actions:['Ensure adequate soil moisture','Maintain soil temperature 20–30°C','Avoid compaction'] },
+    { id:1, name:'Seedling',    code:'V1', days:'Days 7–14', icon:'fas fa-seedling', stemH:55, leaves:2, pods:0, desc:'First unifoliate leaves unfold. Cotyledons provide initial nutrients. Root system begins rapid expansion.', height:'8 cm', heightP:15, lai:'0.5', laiP:12, chl:'45%', chlP:45, podP:0, actions:['Begin weed control','Monitor for early pests','Apply starter fertilizer if needed'] },
+    { id:2, name:'Vegetative',  code:'V3', days:'Days 14–35',icon:'fas fa-leaf', stemH:100, leaves:4, pods:0, desc:'Trifoliate leaves emerge. Rapid vegetative growth. Node development and branching begins on the main stem.', height:'22 cm', heightP:35, lai:'1.8', laiP:40, chl:'70%', chlP:70, podP:0, actions:['Side-dress nitrogen if needed','Scout for aphids & spider mites','Ensure adequate phosphorus'] },
+    { id:3, name:'Flowering',   code:'R1', days:'Days 35–55',icon:'fas fa-star', stemH:150, leaves:6, pods:0, desc:'First open flower appears on main stem. Pollination occurs. This is a critical period requiring adequate moisture.', height:'50 cm', heightP:60, lai:'3.5', laiP:70, chl:'82%', chlP:82, podP:10, actions:['Maintain adequate soil moisture','Avoid broad-spectrum insecticides','Monitor for soybean looper'] },
+    { id:4, name:'Pod Fill',    code:'R4', days:'Days 55–80',icon:'fas fa-pills', stemH:185, leaves:6, pods:3, desc:'Seeds begin developing inside pods. Pod length reaches maximum. Rapid accumulation of dry matter in seeds.', height:'75 cm', heightP:80, lai:'4.2', laiP:85, chl:'75%', chlP:75, podP:60, actions:['Critical irrigation period','Apply foliar potassium if deficient','Watch for pod-feeding insects'] },
+    { id:5, name:'Maturity',    code:'R7', days:'Days 80–120',icon:'fas fa-check-double', stemH:200, leaves:3, pods:5, desc:'Pods turn brown and seeds reach physiological maturity. Leaves begin to senesce. Harvest can begin when moisture drops below 15%.', height:'90 cm', heightP:100, lai:'1.0', laiP:20, chl:'30%', chlP:30, podP:100, actions:['Monitor moisture content','Plan harvest timing','Check for pod shatter'] }
+  ];
+
+  let currentStage = 0;
+  let animInterval = null;
+  let playing = false;
+
+  /* Build plants in scene */
+  function buildScene() {
+    const scene = document.getElementById('plantScene');
+    scene.innerHTML = '';
+    STAGES.forEach((s,i) => {
+      const plant = document.createElement('div');
+      plant.className = 'plant-stage' + (i===currentStage?' active-stage':'');
+      plant.id = 'plant-'+i;
+      plant.onclick = () => selectStage(i);
+
+      let leafHTML = '';
+      for (let l=0; l<s.leaves; l++) {
+        leafHTML += `<div class="leaf-pair">
+          <svg class="leaf-svg" viewBox="0 0 22 14"><ellipse cx="5" cy="7" rx="5" ry="3.5" fill="#4caf50" transform="rotate(-20,5,7)"/></svg>
+          <svg class="leaf-svg" viewBox="0 0 22 14"><ellipse cx="17" cy="7" rx="5" ry="3.5" fill="#4caf50" transform="rotate(20,17,7)"/></svg>
+        </div>`;
+      }
+
+      let podHTML = '';
+      for (let p=0; p<s.pods; p++) {
+        podHTML += '<div class="pods-row">';
+        for (let pp=0; pp<2; pp++) podHTML += '<div class="pod"></div>';
+        podHTML += '</div>';
+      }
+
+      plant.innerHTML = `
+        <div class="stage-num">${s.code}</div>
+        <div style="display:flex; flex-direction:column; align-items:center;">
+          ${leafHTML}
+          ${podHTML}
+          <div class="stem" style="height:${s.stemH}px;"></div>
+        </div>
+        <div class="stage-label">${s.name}</div>`;
+      scene.appendChild(plant);
+    });
+
+    /* Tabs */
+    const tabs = document.getElementById('stageTabs');
+    tabs.innerHTML = '';
+    STAGES.forEach((s,i) => {
+      const btn = document.createElement('button');
+      btn.className = 'stage-tab' + (i===currentStage?' active':'');
+      btn.textContent = s.code + ' — ' + s.name;
+      btn.onclick = () => selectStage(i);
+      tabs.appendChild(btn);
+    });
+  }
+
+  function selectStage(i) {
+    currentStage = i;
+    const s = STAGES[i];
+    document.querySelectorAll('.plant-stage').forEach((p,idx) => p.classList.toggle('active-stage', idx===i));
+    document.querySelectorAll('.stage-tab').forEach((t,idx) => t.classList.toggle('active', idx===i));
+
+    document.getElementById('stageName').textContent = s.name;
+    document.getElementById('stageDays').textContent = s.days + ' — Stage ' + s.code;
+    document.getElementById('stageDesc').textContent = s.desc;
+    document.getElementById('mHeight').textContent = s.height;
+    document.getElementById('mLAI').textContent    = s.lai;
+    document.getElementById('mChl').textContent    = s.chl;
+    document.getElementById('mPod').textContent    = s.podP + '%';
+    ['Height','LAI','Chl','Pod'].forEach(m => {
+      const f = document.getElementById('f'+m);
+      if (f) f.style.width = s[m.toLowerCase()+'P'] + '%';
+    });
+    document.getElementById('fHeight').style.width = s.heightP + '%';
+    document.getElementById('fLAI').style.width    = s.laiP    + '%';
+    document.getElementById('fChl').style.width    = s.chlP    + '%';
+    document.getElementById('fPod').style.width    = s.podP    + '%';
+    document.getElementById('actions').innerHTML = s.actions.map(a =>
+      `<li><i class="fas fa-circle text-success me-2" style="font-size:.5rem;"></i>${a}</li>`).join('');
+  }
+
+  function toggleAnimation() {
+    playing = !playing;
+    document.getElementById('playIcon').className = playing ? 'fas fa-pause me-2' : 'fas fa-play me-2';
+    document.getElementById('playBtn').querySelector('span') || null;
+    if (playing) {
+      animInterval = setInterval(() => {
+        currentStage = (currentStage+1) % STAGES.length;
+        buildScene();
+        selectStage(currentStage);
+      }, parseInt(document.getElementById('speedSelect').value));
+    } else {
+      clearInterval(animInterval);
+    }
+  }
+
+  function resetStage() {
+    clearInterval(animInterval);
+    playing = false;
+    document.getElementById('playIcon').className = 'fas fa-play me-2';
+    currentStage = 0;
+    buildScene();
+    selectStage(0);
+  }
+
+  function updatePlant() { resetStage(); }
+
+  /* Growth line chart */
+  new Chart(document.getElementById('growthLine'), {
+    type:'line',
+    data:{
+      labels:['Week 1','Week 2','Week 3','Week 4','Week 5','Week 6','Week 7','Week 8','Week 10','Week 12','Week 14','Week 16'],
+      datasets:[
+        { label:'Plant Height (cm)',    data:[3,8,15,25,40,55,65,72,78,85,88,90], borderColor:'#198754', backgroundColor:'rgba(25,135,84,.1)', tension:.4, fill:true },
+        { label:'Leaf Area Index',      data:[0.1,0.5,1.2,2.0,3.0,3.8,4.2,4.0,3.5,2.5,1.5,1.0], borderColor:'#20c997', backgroundColor:'rgba(32,201,151,.1)', tension:.4, fill:false },
+        { label:'Pod Development (%)',  data:[0,0,0,0,5,20,45,65,80,90,95,100], borderColor:'#ffc107', backgroundColor:'rgba(255,193,7,.1)', tension:.4, fill:false }
+      ]
+    },
+    options:{ responsive:true, plugins:{ legend:{ position:'bottom' } }, scales:{ y:{ beginAtZero:true } } }
+  });
+
+  /* Init */
+  buildScene();
+  selectStage(0);
+</script>
+</body>
+</html>

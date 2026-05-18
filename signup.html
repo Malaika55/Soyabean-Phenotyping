@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up – Soybean AI</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+      /* ===== ROOT ===== */
+      :root {
+        --green:  #198754;
+        --teal:   #20c997;
+        --yellow: #ffc107;
+        --dark:   #0d2b1a;
+      }
+
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        min-height: 100vh;
+        background: url("images/back.png") center / cover no-repeat fixed;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+      }
+
+      body::before {
+        content: "";
+        position: fixed; inset: 0;
+        background: linear-gradient(135deg,
+          rgba(22,160,132,.30) 0%,
+          rgba(0,51,0,.86)    100%);
+        z-index: 0;
+      }
+
+      /* ===== NAVBAR ===== */
+      .auth-nav {
+        position: relative; z-index: 10;
+        background: var(--green);
+        height: 70px;
+        display: flex; align-items: center;
+        padding: 0 1.5rem;
+        box-shadow: 0 4px 14px rgba(0,0,0,.25);
+      }
+      .nav-brand {
+        display: flex; align-items: center; gap: 10px;
+        text-decoration: none; color: #fff;
+        font-size: 1.25rem; font-weight: 700;
+      }
+      .nav-brand i { color: var(--yellow); font-size: 1.5rem; }
+      .nav-home {
+        margin-left: auto; color: #fff; font-size: .875rem; font-weight: 600;
+        text-decoration: none; border: 1.5px solid rgba(255,255,255,.55);
+        border-radius: 50px; padding: .35rem 1rem; transition: all .25s;
+      }
+      .nav-home:hover { background: rgba(255,255,255,.15); color: #fff; }
+
+      /* ===== LEAVES ===== */
+      .leaf {
+        position: fixed; z-index: 1; pointer-events: none;
+        color: rgba(255,255,255,.18); animation: floatLeaf 7s ease-in-out infinite;
+      }
+      .leaf-1 { font-size: 2rem;   top: 12%;    left: 7%;   animation-delay: 0s; }
+      .leaf-2 { font-size: 2.5rem; top: 62%;    right: 8%;  animation-delay: 2.5s; }
+      .leaf-3 { font-size: 3rem;   bottom: 18%; left: 16%;  animation-delay: 5s; }
+
+      @keyframes floatLeaf {
+        0%   { transform: translateY(0)    rotate(0deg);  opacity: 0; }
+        40%  { opacity: .9; }
+        100% { transform: translateY(-90px) rotate(22deg); opacity: 0; }
+      }
+
+      /* ===== WRAPPER ===== */
+      .auth-wrapper {
+        position: relative; z-index: 2;
+        flex: 1; display: flex; align-items: center; justify-content: center;
+        padding: 2rem 1rem;
+      }
+
+      /* ===== CARD ===== */
+      .auth-card {
+        width: 100%; max-width: 520px;
+        background: #fff;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 28px 65px rgba(0,0,0,.38);
+        animation: cardUp .55s ease-out both;
+      }
+
+      @keyframes cardUp {
+        from { opacity:0; transform:translateY(40px); }
+        to   { opacity:1; transform:translateY(0); }
+      }
+
+      /* card header */
+      .card-top {
+        background: linear-gradient(135deg, var(--green) 0%, var(--teal) 100%);
+        padding: 2.5rem 2rem 2rem;
+        text-align: center; color: #fff;
+        position: relative; overflow: hidden;
+      }
+      .card-top::before {
+        content:""; position:absolute;
+        top:-45px; right:-45px;
+        width:150px; height:150px;
+        background:rgba(255,255,255,.08); border-radius:50%;
+      }
+      .card-top::after {
+        content:""; position:absolute;
+        bottom:-30px; left:-30px;
+        width:110px; height:110px;
+        background:rgba(255,255,255,.06); border-radius:50%;
+      }
+      .top-avatar {
+        width: 74px; height: 74px;
+        background: rgba(255,255,255,.22);
+        border: 3px solid rgba(255,255,255,.4);
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 1rem; font-size: 2.1rem;
+        position: relative; z-index: 1;
+        animation: popIn .5s .3s cubic-bezier(.175,.885,.32,1.275) both;
+      }
+      @keyframes popIn {
+        from { transform:scale(0); opacity:0; }
+        to   { transform:scale(1); opacity:1; }
+      }
+      .card-top h2 {
+        font-size: 1.85rem; font-weight: 700;
+        margin-bottom: .3rem; position: relative; z-index: 1;
+      }
+      .card-top p {
+        opacity: .9; font-size: .92rem;
+        position: relative; z-index: 1; margin: 0;
+      }
+
+      /* ===== BODY ===== */
+      .card-body { padding: 2.25rem 2rem; }
+
+      /* step indicator */
+      .steps {
+        display: flex; align-items: center;
+        margin-bottom: 2rem; gap: 0;
+      }
+      .step-item {
+        display: flex; flex-direction: column; align-items: center;
+        flex: 1; position: relative;
+      }
+      .step-item:not(:last-child)::after {
+        content: "";
+        position: absolute; top: 18px; left: calc(50% + 18px);
+        width: calc(100% - 36px); height: 2px;
+        background: #e2e8f0;
+        transition: background .4s;
+        z-index: 0;
+      }
+      .step-item.done:not(:last-child)::after { background: var(--green); }
+
+      .step-circle {
+        width: 36px; height: 36px;
+        border-radius: 50%;
+        border: 2px solid #e2e8f0;
+        display: flex; align-items: center; justify-content: center;
+        font-size: .8rem; font-weight: 700; color: #a0aec0;
+        background: #fff; z-index: 1;
+        transition: all .35s;
+      }
+      .step-item.active .step-circle {
+        border-color: var(--green); color: var(--green);
+        box-shadow: 0 0 0 4px rgba(25,135,84,.15);
+      }
+      .step-item.done .step-circle {
+        background: var(--green); border-color: var(--green);
+        color: #fff;
+      }
+      .step-label {
+        font-size: .72rem; color: #a0aec0; margin-top: .35rem;
+        font-weight: 600; text-transform: uppercase; letter-spacing: .4px;
+        transition: color .3s;
+      }
+      .step-item.active .step-label { color: var(--green); }
+      .step-item.done  .step-label  { color: var(--green); }
+
+      /* step panels */
+      .step-panel { display: none; }
+      .step-panel.active { display: block; }
+
+      /* alert */
+      .auth-alert {
+        display: none;
+        border-radius: 12px; border: none;
+        padding: .85rem 1rem; font-size: .88rem;
+        margin-bottom: 1.25rem;
+      }
+
+      /* labels */
+      .field-label {
+        display: block;
+        font-weight: 600; font-size: .82rem; color: var(--green);
+        margin-bottom: .45rem; letter-spacing: .3px;
+      }
+
+      /* input group */
+      .inp-group { position: relative; margin-bottom: 1.1rem; }
+      .inp-icon {
+        position: absolute; left: 14px; top: 50%;
+        transform: translateY(-50%);
+        color: var(--green); font-size: .95rem; z-index: 4; pointer-events: none;
+      }
+      /* for select (top-aligned icon) */
+      .inp-icon.top { top: 17px; transform: none; }
+
+      .auth-inp {
+        width: 100%;
+        border: 2px solid #e2e8f0; border-radius: 14px;
+        padding: .82rem 2.8rem .82rem 2.75rem;
+        font-size: .97rem; color: #1a202c;
+        background: #f7fafc; outline: none;
+        transition: border-color .25s, box-shadow .25s, background .25s;
+        appearance: none;
+      }
+      .auth-inp:focus {
+        border-color: var(--green);
+        box-shadow: 0 0 0 .22rem rgba(25,135,84,.18);
+        background: #fff;
+      }
+      .auth-inp.error {
+        border-color: #e53e3e;
+        box-shadow: 0 0 0 .22rem rgba(229,62,62,.15);
+      }
+      .auth-inp.ok { border-color: var(--green); }
+
+      /* eye btn */
+      .eye-btn {
+        position: absolute; right: 13px; top: 50%;
+        transform: translateY(-50%);
+        background: none; border: none;
+        color: #718096; cursor: pointer; z-index: 4;
+        font-size: .95rem; padding: 0; line-height: 1;
+        transition: color .2s;
+      }
+      .eye-btn:hover { color: var(--green); }
+
+      /* error text */
+      .err-msg {
+        display: none; font-size: .78rem; color: #e53e3e;
+        margin-top: .3rem; padding-left: .4rem; margin-bottom: .4rem;
+      }
+
+      /* ── password strength ── */
+      .strength-wrap { margin-top: .4rem; margin-bottom: .2rem; }
+      .strength-track {
+        height: 6px; border-radius: 4px; background: #e2e8f0; overflow: hidden;
+      }
+      .strength-fill {
+        height: 100%; border-radius: 4px; width: 0%;
+        transition: width .4s ease, background .4s ease;
+      }
+      .strength-label {
+        font-size: .76rem; color: #a0aec0; margin-top: .3rem;
+      }
+
+      /* ── requirements list ── */
+      .req-list {
+        list-style: none; padding: 0; margin: .6rem 0 1rem;
+        display: grid; grid-template-columns: 1fr 1fr; gap: .3rem;
+      }
+      .req-list li {
+        font-size: .78rem; color: #a0aec0;
+        display: flex; align-items: center; gap: .4rem;
+      }
+      .req-list li i { font-size: .7rem; }
+      .req-list li.met { color: var(--green); }
+
+      /* nav buttons */
+      .btn-row {
+        display: flex; gap: .75rem; margin-top: 1.4rem;
+      }
+      .btn-back {
+        flex: 0 0 auto;
+        background: #f7fafc; border: 2px solid #e2e8f0;
+        border-radius: 14px; padding: .84rem 1.4rem;
+        font-size: .95rem; font-weight: 700; color: #4a5568;
+        cursor: pointer; transition: all .25s;
+        display: flex; align-items: center; gap: .4rem;
+      }
+      .btn-back:hover { background: #edf2f7; border-color: #cbd5e0; }
+
+      .btn-next, .btn-submit {
+        flex: 1;
+        background: linear-gradient(135deg, var(--green) 0%, var(--teal) 100%);
+        border: none; border-radius: 14px;
+        padding: .9rem; font-size: 1rem; font-weight: 700; color: #fff;
+        box-shadow: 0 6px 22px rgba(25,135,84,.32);
+        cursor: pointer; transition: transform .25s, box-shadow .25s;
+        display: flex; align-items: center; justify-content: center; gap: .5rem;
+      }
+      .btn-next:hover:not(:disabled),
+      .btn-submit:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 11px 30px rgba(25,135,84,.44);
+      }
+      .btn-next:disabled, .btn-submit:disabled { opacity: .72; cursor: not-allowed; }
+
+      /* notice box */
+      .notice-box {
+        display: flex; align-items: flex-start; gap: .6rem;
+        background: linear-gradient(135deg,
+          rgba(255,193,7,.1), rgba(255,193,7,.05));
+        border: 1px solid rgba(255,193,7,.35);
+        border-radius: 14px;
+        padding: .9rem 1.1rem;
+        font-size: .83rem; color: #856404;
+        margin-bottom: 1.25rem;
+      }
+      .notice-box i { margin-top: .15rem; flex-shrink: 0; }
+
+      /* divider */
+      .divider {
+        display: flex; align-items: center; gap: 10px;
+        font-size: .8rem; color: #a0aec0; margin: 1.1rem 0;
+      }
+      .divider::before, .divider::after {
+        content:""; flex:1; height:1px; background:#e2e8f0;
+      }
+
+      .bottom-link { text-align: center; font-size: .87rem; color: #718096; }
+      .bottom-link a {
+        color: var(--green); font-weight: 700;
+        text-decoration: none; margin-left: .25rem;
+      }
+      .bottom-link a:hover { text-decoration: underline; }
+
+      /* ── SUCCESS SCREEN ── */
+      .success-screen {
+        display: none;
+        flex-direction: column; align-items: center; justify-content: center;
+        padding: 3rem 2rem; text-align: center;
+      }
+      .success-icon {
+        width: 96px; height: 96px;
+        background: linear-gradient(135deg, var(--green), var(--teal));
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 2.6rem; color: #fff;
+        box-shadow: 0 12px 35px rgba(25,135,84,.38);
+        margin-bottom: 1.5rem;
+        animation: popIn .5s cubic-bezier(.175,.885,.32,1.275);
+      }
+      .success-screen h3 { font-size: 1.6rem; font-weight: 700; color: var(--green); margin-bottom: .5rem; }
+      .success-screen p  { color: #718096; margin-bottom: .4rem; }
+      .success-screen .small { font-size: .82rem; }
+
+      .btn-gohome {
+        margin-top: 1.5rem;
+        background: linear-gradient(135deg, var(--green) 0%, var(--teal) 100%);
+        border: none; border-radius: 14px;
+        padding: .9rem 2.5rem; font-size: 1rem; font-weight: 700; color: #fff;
+        box-shadow: 0 6px 22px rgba(25,135,84,.32);
+        cursor: pointer; transition: transform .25s, box-shadow .25s;
+      }
+      .btn-gohome:hover { transform: translateY(-2px); }
+
+      /* ===== FOOTER ===== */
+      .auth-footer {
+        position: relative; z-index: 2;
+        text-align: center; padding: 1.1rem;
+        font-size: .8rem; color: rgba(255,255,255,.65);
+      }
+
+      /* ===== RESPONSIVE ===== */
+      @media (max-width: 480px) {
+        .card-body { padding: 1.75rem 1.25rem; }
+        .card-top  { padding: 2rem 1.25rem 1.5rem; }
+        .req-list  { grid-template-columns: 1fr; }
+        .step-label { font-size: .65rem; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Floating leaves -->
+    <div class="leaf leaf-1"><i class="fas fa-leaf"></i></div>
+    <div class="leaf leaf-2"><i class="fas fa-leaf"></i></div>
+    <div class="leaf leaf-3"><i class="fas fa-seedling"></i></div>
+
+    <!-- NAVBAR -->
+    <nav class="auth-nav">
+      <a href="index.html" class="nav-brand">
+        <i class="fas fa-leaf"></i> Soybean AI
+      </a>
+      <a href="index.html" class="nav-home">
+        <i class="fas fa-home me-1"></i> Home
+      </a>
+    </nav>
+
+    <!-- MAIN -->
+    <div class="auth-wrapper">
+      <div class="auth-card" id="mainCard">
+
+        <!-- TOP HEADER -->
+        <div class="card-top">
+          <div class="top-avatar"><i class="fas fa-user-plus"></i></div>
+          <h2>Create Account</h2>
+          <p>Request access to the Soybean AI System</p>
+        </div>
+
+        <!-- BODY -->
+        <div class="card-body" id="formBody">
+
+          <!-- Step Indicator -->
+          <div class="steps" id="stepIndicator">
+            <div class="step-item active" id="si1">
+              <div class="step-circle">1</div>
+              <div class="step-label">Personal</div>
+            </div>
+            <div class="step-item" id="si2">
+              <div class="step-circle">2</div>
+              <div class="step-label">Security</div>
+            </div>
+            <div class="step-item" id="si3">
+              <div class="step-circle"><i class="fas fa-check"></i></div>
+              <div class="step-label">Review</div>
+            </div>
+          </div>
+
+          <!-- Alert -->
+          <div class="auth-alert alert-danger" id="signupAlert" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <span id="alertMsg"></span>
+          </div>
+
+          <!-- ════════════════════════════
+               STEP 1 – Personal Info
+               ════════════════════════════ -->
+          <div class="step-panel active" id="panel1">
+
+            <!-- Full Name -->
+            <label class="field-label" for="fullName">
+              <i class="fas fa-user me-1"></i> Full Name
+            </label>
+            <div class="inp-group">
+              <i class="inp-icon fas fa-user"></i>
+              <input type="text" id="fullName" class="auth-inp"
+                placeholder="e.g. Muhammad Ali" autocomplete="name" />
+            </div>
+            <div class="err-msg" id="fullNameErr"><i class="fas fa-circle-exclamation me-1"></i><span></span></div>
+
+            <!-- Email -->
+            <label class="field-label" for="email">
+              <i class="fas fa-envelope me-1"></i> Email Address
+            </label>
+            <div class="inp-group">
+              <i class="inp-icon fas fa-envelope"></i>
+              <input type="email" id="email" class="auth-inp"
+                placeholder="you@example.com" autocomplete="email" />
+            </div>
+            <div class="err-msg" id="emailErr"><i class="fas fa-circle-exclamation me-1"></i><span></span></div>
+
+            <!-- Role -->
+            <label class="field-label" for="role">
+              <i class="fas fa-id-badge me-1"></i> Your Role
+            </label>
+            <div class="inp-group">
+              <i class="inp-icon top fas fa-id-badge"></i>
+              <select id="role" class="auth-inp">
+                <option value="" disabled selected>Select your role…</option>
+                <option value="Administrator">Administrator</option>
+                <option value="Researcher">Researcher</option>
+                <option value="Farmer">Farmer</option>
+                <option value="Student">Student</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="err-msg" id="roleErr"><i class="fas fa-circle-exclamation me-1"></i><span></span></div>
+
+            <!-- Reason -->
+            <label class="field-label" for="reason">
+              <i class="fas fa-comment-dots me-1"></i> Reason for Access <span style="font-weight:400;color:#a0aec0">(optional)</span>
+            </label>
+            <div class="inp-group">
+              <i class="inp-icon top fas fa-comment-dots" style="top:16px"></i>
+              <textarea id="reason" class="auth-inp" rows="2"
+                placeholder="Briefly describe why you need access…"
+                style="resize:none; padding-top:.75rem; padding-bottom:.75rem;"></textarea>
+            </div>
+
+            <div class="btn-row" style="margin-top:1.2rem">
+              <button class="btn-next" onclick="goStep2()">
+                Next <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+
+            <div class="divider">or</div>
+            <div class="bottom-link">
+              Already have an account? <a href="login.html">Sign In</a>
+            </div>
+
+          </div><!-- /panel1 -->
+
+
+          <!-- ════════════════════════════
+               STEP 2 – Security
+               ════════════════════════════ -->
+          <div class="step-panel" id="panel2">
+
+            <!-- Password -->
+            <label class="field-label" for="password">
+              <i class="fas fa-lock me-1"></i> Create Password
+            </label>
+            <div class="inp-group">
+              <i class="inp-icon fas fa-lock"></i>
+              <input type="password" id="password" class="auth-inp"
+                placeholder="Minimum 8 characters"
+                autocomplete="new-password"
+                oninput="checkStrength(this.value)" />
+              <button class="eye-btn" type="button" id="eye1" onclick="toggleEye('password','eye1')">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <div class="err-msg" id="passErr"><i class="fas fa-circle-exclamation me-1"></i><span></span></div>
+
+            <!-- Strength bar -->
+            <div class="strength-wrap">
+              <div class="strength-track">
+                <div class="strength-fill" id="sFill"></div>
+              </div>
+              <div class="strength-label" id="sLabel"></div>
+            </div>
+
+            <!-- Requirements -->
+            <ul class="req-list" id="reqList">
+              <li id="req-len"><i class="fas fa-circle"></i> 8+ characters</li>
+              <li id="req-upper"><i class="fas fa-circle"></i> Uppercase letter</li>
+              <li id="req-num"><i class="fas fa-circle"></i> Number</li>
+              <li id="req-sym"><i class="fas fa-circle"></i> Special character</li>
+            </ul>
+
+            <!-- Confirm Password -->
+            <label class="field-label" for="confirm">
+              <i class="fas fa-lock me-1"></i> Confirm Password
+            </label>
+            <div class="inp-group">
+              <i class="inp-icon fas fa-lock"></i>
+              <input type="password" id="confirm" class="auth-inp"
+                placeholder="Re-enter your password"
+                autocomplete="new-password" />
+              <button class="eye-btn" type="button" id="eye2" onclick="toggleEye('confirm','eye2')">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <div class="err-msg" id="confirmErr"><i class="fas fa-circle-exclamation me-1"></i><span></span></div>
+
+            <div class="btn-row">
+              <button class="btn-back" onclick="goStep(1)">
+                <i class="fas fa-arrow-left"></i> Back
+              </button>
+              <button class="btn-next" onclick="goStep3()">
+                Next <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+
+          </div><!-- /panel2 -->
+
+
+          <!-- ════════════════════════════
+               STEP 3 – Review & Submit
+               ════════════════════════════ -->
+          <div class="step-panel" id="panel3">
+
+            <h5 class="fw-bold text-success mb-3" style="font-size:1rem">
+              <i class="fas fa-clipboard-check me-2"></i>Review Your Details
+            </h5>
+
+            <!-- Summary table -->
+            <div style="background:#f7fafc; border-radius:16px; padding:1.2rem; margin-bottom:1.25rem; border:1px solid #e2e8f0;">
+              <div style="display:flex; justify-content:space-between; padding:.55rem 0; border-bottom:1px solid #e2e8f0;">
+                <span style="font-size:.85rem; color:#718096; font-weight:600;">Full Name</span>
+                <span style="font-size:.85rem; color:#1a202c; font-weight:600;" id="rv-name">—</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; padding:.55rem 0; border-bottom:1px solid #e2e8f0;">
+                <span style="font-size:.85rem; color:#718096; font-weight:600;">Email</span>
+                <span style="font-size:.85rem; color:#1a202c; font-weight:600;" id="rv-email">—</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; padding:.55rem 0; border-bottom:1px solid #e2e8f0;">
+                <span style="font-size:.85rem; color:#718096; font-weight:600;">Role</span>
+                <span style="font-size:.85rem; color:#1a202c; font-weight:600;" id="rv-role">—</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; padding:.55rem 0;">
+                <span style="font-size:.85rem; color:#718096; font-weight:600;">Password</span>
+                <span style="font-size:.85rem; color:#1a202c; font-weight:600;">••••••••</span>
+              </div>
+            </div>
+
+            <!-- Notice -->
+            <div class="notice-box">
+              <i class="fas fa-clock"></i>
+              <div>
+                <strong>Approval Required.</strong>
+                Your request will be reviewed by an administrator before you can sign in. You will be notified via email.
+              </div>
+            </div>
+
+            <!-- Terms -->
+            <div class="form-check mb-1" style="margin-bottom:.7rem !important">
+              <input class="form-check-input" type="checkbox" id="terms" />
+              <label class="form-check-label" for="terms" style="font-size:.84rem; color:#4a5568">
+                I agree to the
+                <a href="#" style="color:var(--green); font-weight:600">Terms of Service</a>
+                and
+                <a href="#" style="color:var(--green); font-weight:600">Privacy Policy</a>.
+              </label>
+            </div>
+            <div class="err-msg" id="termsErr"><i class="fas fa-circle-exclamation me-1"></i><span></span></div>
+
+            <div class="btn-row" style="margin-top:1.2rem">
+              <button class="btn-back" onclick="goStep(2)">
+                <i class="fas fa-arrow-left"></i> Back
+              </button>
+              <button class="btn-submit" id="submitBtn" onclick="handleSubmit()">
+                <i class="fas fa-paper-plane"></i> Submit Request
+              </button>
+            </div>
+
+          </div><!-- /panel3 -->
+
+        </div><!-- /card-body -->
+
+
+        <!-- ════════════════ SUCCESS SCREEN ════════════════ -->
+        <div class="success-screen" id="successScreen">
+          <div class="success-icon"><i class="fas fa-check"></i></div>
+          <h3>Request Submitted!</h3>
+          <p>Your account request has been sent to the admin for approval.</p>
+          <p class="small" style="color:#a0aec0">
+            You'll receive an email at <strong id="succEmail" style="color:var(--green)"></strong>
+            once your access is granted.
+          </p>
+          <button class="btn-gohome" onclick="window.location.href='login.html'">
+            <i class="fas fa-sign-in-alt me-2"></i>Go to Sign In
+          </button>
+        </div>
+
+      </div><!-- /auth-card -->
+    </div><!-- /auth-wrapper -->
+
+    <footer class="auth-footer">
+      &copy; 2024 Soybean AI &nbsp;·&nbsp; Final Year Project &nbsp;·&nbsp; Department of Computer Science
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      /* ── eye toggle ── */
+      function toggleEye(inputId, btnId) {
+        const inp = document.getElementById(inputId);
+        const ico = document.querySelector('#' + btnId + ' i');
+        if (inp.type === 'password') {
+          inp.type = 'text';
+          ico.classList.replace('fa-eye','fa-eye-slash');
+        } else {
+          inp.type = 'password';
+          ico.classList.replace('fa-eye-slash','fa-eye');
+        }
+      }
+
+      /* ── password strength ── */
+      function checkStrength(val) {
+        const reqs = {
+          'req-len':   val.length >= 8,
+          'req-upper': /[A-Z]/.test(val),
+          'req-num':   /[0-9]/.test(val),
+          'req-sym':   /[^A-Za-z0-9]/.test(val)
+        };
+
+        let score = Object.values(reqs).filter(Boolean).length;
+
+        Object.entries(reqs).forEach(([id, met]) => {
+          const li = document.getElementById(id);
+          li.classList.toggle('met', met);
+          li.querySelector('i').className = met
+            ? 'fas fa-check-circle'
+            : 'fas fa-circle';
+        });
+
+        const fill  = document.getElementById('sFill');
+        const label = document.getElementById('sLabel');
+        const levels = [
+          { w:'0%',   color:'#e2e8f0', text:'' },
+          { w:'28%',  color:'#e53e3e', text:'Weak' },
+          { w:'55%',  color:'#f6ad55', text:'Fair' },
+          { w:'80%',  color:'#68d391', text:'Good' },
+          { w:'100%', color:'#198754', text:'Strong' }
+        ];
+        fill.style.width      = levels[score].w;
+        fill.style.background = levels[score].color;
+        label.textContent = score ? 'Strength: ' + levels[score].text : '';
+        label.style.color = levels[score].color;
+      }
+
+      /* ── field helpers ── */
+      function setErr(id, msg) {
+        const inp = document.getElementById(id);
+        const el  = document.getElementById(id + 'Err');
+        if (inp) { inp.classList.add('error'); inp.classList.remove('ok'); }
+        if (el)  { el.querySelector('span').textContent = msg; el.style.display = 'block'; }
+      }
+      function setOk(id) {
+        const inp = document.getElementById(id);
+        const el  = document.getElementById(id + 'Err');
+        if (inp) { inp.classList.remove('error'); inp.classList.add('ok'); }
+        if (el)  { el.style.display = 'none'; }
+      }
+      function clearF(id) {
+        const inp = document.getElementById(id);
+        const el  = document.getElementById(id + 'Err');
+        if (inp) inp.classList.remove('error','ok');
+        if (el)  el.style.display = 'none';
+      }
+
+      /* clear errors on input */
+      ['fullName','email','role','password','confirm'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', () => { clearF(id); hideAlert(); });
+      });
+
+      /* ── alert ── */
+      function showAlert(msg) {
+        const el = document.getElementById('signupAlert');
+        document.getElementById('alertMsg').textContent = msg;
+        el.style.display = 'flex';
+      }
+      function hideAlert() {
+        document.getElementById('signupAlert').style.display = 'none';
+      }
+
+      /* ── step management ── */
+      let currentStep = 1;
+
+      function goStep(n) {
+        hideAlert();
+        // deactivate all
+        for (let i = 1; i <= 3; i++) {
+          document.getElementById('panel' + i).classList.remove('active');
+          const si = document.getElementById('si' + i);
+          si.classList.remove('active');
+          if (i < n) si.classList.add('done'); else si.classList.remove('done');
+        }
+        document.getElementById('panel' + n).classList.add('active');
+        document.getElementById('si' + n).classList.add('active');
+        currentStep = n;
+      }
+
+      /* ── Step 1 validation ── */
+      function goStep2() {
+        hideAlert();
+        let ok = true;
+
+        const name  = document.getElementById('fullName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const role  = document.getElementById('role').value;
+
+        if (!name || name.length < 2) {
+          setErr('fullName', 'Please enter your full name (at least 2 characters).'); ok = false;
+        } else { setOk('fullName'); }
+
+        if (!email) {
+          setErr('email', 'Email address is required.'); ok = false;
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          setErr('email', 'Please enter a valid email address.'); ok = false;
+        } else { setOk('email'); }
+
+        if (!role) {
+          setErr('role', 'Please select your role.'); ok = false;
+        } else { setOk('role'); }
+
+        if (ok) goStep(2);
+      }
+
+      /* ── Step 2 validation ── */
+      function goStep3() {
+        hideAlert();
+        let ok = true;
+
+        const pass    = document.getElementById('password').value;
+        const confirm = document.getElementById('confirm').value;
+
+        if (!pass) {
+          setErr('password', 'Please create a password.'); ok = false;
+        } else if (pass.length < 8) {
+          setErr('password', 'Password must be at least 8 characters.'); ok = false;
+        } else { setOk('password'); }
+
+        if (!confirm) {
+          setErr('confirm', 'Please confirm your password.'); ok = false;
+        } else if (pass !== confirm) {
+          setErr('confirm', 'Passwords do not match.'); ok = false;
+        } else { setOk('confirm'); }
+
+        if (ok) {
+          // populate review screen
+          document.getElementById('rv-name').textContent  = document.getElementById('fullName').value.trim();
+          document.getElementById('rv-email').textContent = document.getElementById('email').value.trim();
+          document.getElementById('rv-role').textContent  = document.getElementById('role').value;
+          goStep(3);
+        }
+      }
+
+      /* ── Final submit ── */
+      function handleSubmit() {
+        hideAlert();
+
+        if (!document.getElementById('terms').checked) {
+          setErr('terms', 'You must agree to the Terms of Service to continue.');
+          return;
+        }
+        clearF('terms');
+
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting…';
+
+        // Save request to localStorage (front-end demo only)
+        const request = {
+          name:    document.getElementById('fullName').value.trim(),
+          email:   document.getElementById('email').value.trim().toLowerCase(),
+          role:    document.getElementById('role').value,
+          reason:  document.getElementById('reason').value.trim(),
+          date:    new Date().toISOString(),
+          status:  'pending'
+        };
+
+        const existing = JSON.parse(localStorage.getItem('soybean_requests') || '[]');
+        existing.push(request);
+        localStorage.setItem('soybean_requests', JSON.stringify(existing));
+
+        setTimeout(() => {
+          // show success screen
+          document.getElementById('formBody').style.display  = 'none';
+          document.getElementById('succEmail').textContent   = request.email;
+          const ss = document.getElementById('successScreen');
+          ss.style.display = 'flex';
+        }, 1200);
+      }
+    </script>
+  </body>
+</html>

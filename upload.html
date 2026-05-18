@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Soybean Plant Image - Soybean Phenotyping</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome 6.4.0 CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Custom CSS -->
+    <link href="style.css" rel="stylesheet" />
+    <style>
+      body {
+        background-color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark sticky-top custom-navbar">
+      <div class="container-fluid">
+        <!-- Logo -->
+        <a class="navbar-brand" href="#">
+          <img src="images/Capture.PNG" alt="Logo" class="pill-rounded" />
+        </a>
+
+        <!-- Offcanvas Toggler for Mobile -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#mobileMenu"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Desktop Menu -->
+        <div class="d-none d-md-flex w-100 align-items-center">
+          <!-- Centered links -->
+          <ul class="navbar-nav d-flex mx-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="upload.html">Upload</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="comparison.html">Comparison</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="reports.html">Reports</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="growth3d.html">3D Growth</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about.html">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="contact.html">Contact</a>
+            </li>
+          </ul>
+
+          <!-- Search Form on Right -->
+          <form class="d-flex ms-auto">
+            <input
+              class="form-control me-2"
+              type="search"
+              placeholder="Search"
+            />
+            <button class="btn btn-outline-light">Search</button>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <!-- OFFCANVAS MOBILE MENU -->
+    <div
+      class="offcanvas offcanvas-end text-bg-success"
+      tabindex="-1"
+      id="mobileMenu"
+    >
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title">Menu</h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="offcanvas"
+        ></button>
+      </div>
+
+      <div class="offcanvas-body">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Upload</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Comparison</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Reports</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">3D Growth</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+        </ul>
+
+        <form class="d-flex mt-3">
+          <input class="form-control me-2" type="search" placeholder="Search" />
+          <button class="btn btn-outline-light">Search</button>
+        </form>
+      </div>
+    </div>
+    <!-- Page Header -->
+    <!-- <header class="page-header" id="pageHeader">
+      <div class="container">
+        <div class="row justify-content-center text-center">
+          <div class="col-lg-8 col-md-12">
+            <div
+              class="d-flex justify-content-center align-items-center gap-3 mb-3"
+            >
+              <div class="hero-badge texr-center animate-fade-in-down mt-4">
+                <span
+                  class="badge bg-success bg-opacity-75 border border-light"
+                >
+                  <i class="bi bi-camera2 header-icon"></i> Soybean Plant
+                  Analysis
+                </span>
+              </div>
+            </div>
+            <h1 class="header-title">Upload Soybean Plant Image</h1>
+            <p class="header-subtitle">
+              Upload a clear image of the soybean plant for
+              <strong>AI-based phenotyping</strong> and
+              <strong>disease detection</strong>. Get instant insights on plant
+              health, growth stage, and potential issues.
+            </p>
+          </div>
+        </div>
+      </div>
+    </header> -->
+    <section
+      class="page-header d-flex align-items-center"
+      style="
+        min-height: 280px;
+        background: linear-gradient(135deg, #198754 0%, #0d6b3f 100%);
+        position: relative;
+        overflow: hidden;
+      "
+    >
+      <div class="floating-leaf leaf-1"><i class="fas fa-leaf"></i></div>
+      <div class="floating-leaf leaf-2"><i class="fas fa-leaf"></i></div>
+      <div
+        class="container text-white text-center position-relative"
+        style="z-index: 2"
+      >
+        <div
+          class="section-badge"
+          style="
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.3);
+          "
+        >
+          <i class="fas fa-camera me-2"></i>Variety Comparison
+        </div>
+        <h1 class="display-4 fw-bold mb-3">Upload Soybean Plant Image</h1>
+        <p class="lead opacity-90 mb-0">
+          Select up to 3 varieties to compare growth traits, disease resistance,
+          and yield data
+        </p>
+      </div>
+    </section>
+    <!-- Image Quality Instructions Section -->
+    <section class="quality-tips-section py-5">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-10">
+            <!-- Tips Card -->
+            <div class="tips-card card border-0 shadow fade-in-up">
+              <div class="card-body p-5">
+                <div class="row align-items-center g-4">
+                  <!-- Left Content -->
+                  <div class="col-lg-8">
+                    <div class="tips-header mb-4">
+                      <i class="bi bi-lightbulb-fill tips-icon"></i>
+                      <h2 class="tips-title">Tips for Best Results</h2>
+                    </div>
+
+                    <div class="row g-4">
+                      <div class="col-md-6">
+                        <div class="tip-item">
+                          <div class="tip-number">1</div>
+                          <div>
+                            <h6 class="tip-title-text">Clear Lighting</h6>
+                            <p class="tip-desc">
+                              Use natural daylight. Avoid harsh shadows or
+                              direct sunlight glare.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="tip-item">
+                          <div class="tip-number">2</div>
+                          <div>
+                            <h6 class="tip-title-text">Full Plant View</h6>
+                            <p class="tip-desc">
+                              Capture the entire plant from base to top. Include
+                              soil line if possible.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="tip-item">
+                          <div class="tip-number">3</div>
+                          <div>
+                            <h6 class="tip-title-text">Sharp Focus</h6>
+                            <p class="tip-desc">
+                              Hold steady, use focus mode. Blurry images reduce
+                              accuracy.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="tip-item">
+                          <div class="tip-number">4</div>
+                          <div>
+                            <h6 class="tip-title-text">Simple Background</h6>
+                            <p class="tip-desc">
+                              Avoid cluttered backgrounds. Plain soil or sky
+                              works best.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Right Visual -->
+                  <div class="col-lg-4 text-center">
+                    <div class="tips-visual">
+                      <img
+                        src="images/hero card1.jpg"
+                        alt="Perfect soybean plant photo example"
+                        class="img-fluid rounded-4 shadow-lg example-image"
+                        onerror="
+                          this.src =
+                            'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjhmOWZhIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzZjNzU3ZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkV4YW1wbGUgSW1hZ2U8L3RleHQ+PC9zdmc+'
+                        "
+                      />
+                      <div class="visual-label mt-3">
+                        <i
+                          class="bi bi-check-circle-fill text-success me-2"
+                        ></i>
+                        <strong>Like This</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- UPLOAD SECTION -->
+    <section class="upload-section py-5">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-8 col-xl-6">
+            <!-- Upload Card -->
+            <div class="upload-card card shadow-lg border-0 fade-in-up">
+              <div class="card-body p-5 text-center">
+                <!-- Upload Title -->
+                <div class="upload-header mb-4">
+                  <i class="bi bi-cloud-upload upload-icon"></i>
+                  <h2 class="upload-title mb-2">Select Soybean Image</h2>
+                  <p class="upload-subtitle text-muted">
+                    Upload a clear photo of your soybean plant (JPG, PNG up to
+                    10MB)
+                  </p>
+                </div>
+
+                <!-- Drag & Drop Area -->
+                <div class="upload-area" id="uploadArea">
+                  <div class="upload-zone" id="uploadZone">
+                    <i class="bi bi-image upload-placeholder-icon"></i>
+                    <p class="upload-placeholder-text">
+                      Drag & drop your image here
+                    </p>
+                    <p class="upload-placeholder-subtext">or</p>
+                    <label
+                      for="imageInput"
+                      class="upload-btn btn btn-primary btn-lg px-5"
+                    >
+                      <i class="bi bi-cloud-upload me-2"></i>
+                      Choose File
+                    </label>
+                    <small class="text-muted mt-2 d-block"
+                      >Supports JPG, PNG • Max 10MB</small
+                    >
+                  </div>
+
+                  <!-- Hidden File Input -->
+                  <input
+                    type="file"
+                    id="imageInput"
+                    class="d-none"
+                    accept="image/jpeg,image/jpg,image/png"
+                  />
+                </div>
+
+                <!-- Image Preview (Hidden by default) -->
+                <div
+                  class="image-preview-container d-none"
+                  id="imagePreviewContainer"
+                >
+                  <div class="row align-items-center">
+                    <div class="col-md-8">
+                      <div class="image-preview-wrapper">
+                        <img
+                          id="previewImage"
+                          class="img-fluid rounded shadow"
+                          alt="Soybean plant preview"
+                        />
+                        <button
+                          class="btn-remove-image"
+                          id="removeImageBtn"
+                          title="Remove image"
+                        >
+                          <i class="bi bi-x-lg"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="preview-info">
+                        <h5 class="preview-filename" id="previewFilename"></h5>
+                        <div class="preview-details">
+                          <div class="detail-item">
+                            <i class="bi bi-file-earmark-image"></i>
+                            <span id="previewFileType"></span>
+                          </div>
+                          <div class="detail-item">
+                            <i class="bi bi-hdd-network"></i>
+                            <span id="previewFileSize"></span>
+                          </div>
+                        </div>
+                        <button
+                          class="btn btn-success btn-lg w-100 mt-3"
+                          id="analyzeBtn"
+                        >
+                          <i class="bi bi-rocket-takeoff me-2"></i>
+                          Analyze Image
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- after the upload section -->
+    <!-- Plant Information Form Section -->
+    <section class="form-section py-5 bg-light">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-10 col-xl-8">
+            <!-- Form Card -->
+            <div class="form-card card shadow-lg border-0 fade-in-up">
+              <div
+                class="card-header bg-gradient-primary text-white text-center py-4"
+              >
+                <i class="bi bi-info-circle-fill form-icon"></i>
+                <h3 class="form-title mb-1">Plant Information</h3>
+                <p class="form-subtitle mb-0">
+                  Help our AI provide more accurate analysis
+                </p>
+              </div>
+              <div class="card-body p-5">
+                <form id="plantInfoForm">
+                  <!-- Row 1 -->
+                  <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold"
+                        >Soybean Variety
+                        <span class="text-muted">(Optional)</span></label
+                      >
+                      <input
+                        type="text"
+                        class="form-control form-control-lg"
+                        id="soybeanVariety"
+                        placeholder="e.g., JS-335, Pusa-1, Bragg"
+                      />
+                      <div class="form-text">
+                        Common varieties: JS-335, Pusa Bold, Bragg, Lee
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold"
+                        >Growth Stage <span class="text-danger">*</span></label
+                      >
+                      <select
+                        class="form-select form-select-lg"
+                        id="growthStage"
+                        required
+                      >
+                        <option value="">Select growth stage</option>
+                        <option value="seedling">
+                          🌱 Seedling (0-3 weeks)
+                        </option>
+                        <option value="vegetative">
+                          🌿 Vegetative (3-8 weeks)
+                        </option>
+                        <option value="flowering">
+                          🌸 Flowering (8-10 weeks)
+                        </option>
+                        <option value="podding">
+                          🌽 Podding (10-14 weeks)
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <!-- Row 2 -->
+                  <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold"
+                        >Plant Height (cm)
+                        <span class="text-danger">*</span></label
+                      >
+                      <div class="input-group">
+                        <input
+                          type="number"
+                          class="form-control form-control-lg"
+                          id="plantHeight"
+                          min="1"
+                          max="200"
+                          step="0.1"
+                          placeholder="45"
+                          required
+                        />
+                        <span class="input-group-text">cm</span>
+                      </div>
+                      <div class="form-text">Typical range: 20-150 cm</div>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold"
+                        >Field Location</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control form-control-lg"
+                        id="fieldLocation"
+                        placeholder="e.g., Farm near Indore, Madhya Pradesh"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- Row 3 -->
+                  <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold"
+                        >Date of Image Capture
+                        <span class="text-danger">*</span></label
+                      >
+                      <input
+                        type="date"
+                        class="form-control form-control-lg"
+                        id="captureDate"
+                        required
+                      />
+                    </div>
+                    <div class="col-md-6 align-self-end">
+                      <div class="form-check form-switch">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="isHealthy"
+                        />
+                        <label
+                          class="form-check-label fw-semibold"
+                          for="isHealthy"
+                        >
+                          Plant appears healthy
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Notes Section -->
+                  <div class="mb-5">
+                    <label class="form-label fw-semibold"
+                      >Notes / Observations
+                      <span class="text-muted">(Optional)</span></label
+                    >
+                    <textarea
+                      class="form-control"
+                      id="notes"
+                      rows="4"
+                      placeholder="Describe any visible symptoms, leaf color changes, pest damage, etc..."
+                    ></textarea>
+                    <div class="form-text">
+                      e.g., Yellowing leaves on lower nodes, small brown spots,
+                      stunted growth
+                    </div>
+                  </div>
+
+                  <!-- Action Buttons -->
+                  <div class="d-flex gap-3 justify-content-between flex-wrap">
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary btn-lg px-4"
+                      id="clearForm"
+                    >
+                      <i class="bi bi-arrow-clockwise me-2"></i>Clear Form
+                    </button>
+                    <div class="d-flex gap-2 flex-wrap">
+                      <button
+                        type="button"
+                        class="btn btn-outline-primary btn-lg px-4"
+                        id="saveDraft"
+                      >
+                        <i class="bi bi-save me-2"></i>Save Draft
+                      </button>
+                      <button
+                        type="submit"
+                        class="btn btn-success btn-lg px-5"
+                        id="submitForm"
+                      >
+                        <i class="bi bi-rocket-takeoff-fill me-2"></i>Submit for
+                        Analysis
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Loading / Processing Overlay -->
+    <div class="loading-overlay d-none" id="loadingOverlay">
+      <div class="loading-card">
+        <div
+          class="spinner-border text-success mb-4"
+          style="width: 60px; height: 60px"
+        ></div>
+
+        <h2 class="loading-title">Analyzing Soybean Plant</h2>
+
+        <p class="loading-subtitle">
+          AI model is processing your image and data...
+        </p>
+
+        <div class="progress mt-4">
+          <div class="progress-bar" id="analysisProgress"></div>
+        </div>
+
+        <div class="progress-stages mt-4">
+          <span class="stage active">📸 Image Processing</span>
+          <span class="stage">🧠 AI Analysis</span>
+          <span class="stage">📊 Results</span>
+        </div>
+
+        <div class="loading-stats mt-4">
+          <span>⚙ AI Model v2.1</span>
+          <span>⏱ ~15 seconds</span>
+        </div>
+
+        <button class="btn btn-outline-dark mt-4" id="cancelAnalysis">
+          Cancel Analysis
+        </button>
+      </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In – Soybean AI</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --green: #198754;
+        --teal: #20c997;
+        --yellow: #ffc107;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", system-ui, sans-serif;
+        min-height: 100vh;
+        background: url("images/back.png") center / cover no-repeat fixed;
+        display: flex;
+        flex-direction: column;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(22, 160, 132, 0.3) 0%,
+          rgba(0, 51, 0, 0.86) 100%
+        );
+        z-index: 0;
+      }
+
+      /* NAVBAR */
+      .auth-nav {
+        position: relative;
+        z-index: 10;
+        background: var(--green);
+        height: 70px;
+        display: flex;
+        align-items: center;
+        padding: 0 1.5rem;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+      }
+      .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        color: #fff;
+        font-size: 1.25rem;
+        font-weight: 700;
+      }
+      .nav-brand i {
+        color: var(--yellow);
+        font-size: 1.5rem;
+      }
+      .nav-home {
+        margin-left: auto;
+        color: #fff;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1.5px solid rgba(255, 255, 255, 0.55);
+        border-radius: 50px;
+        padding: 0.35rem 1rem;
+        transition: all 0.25s;
+      }
+      .nav-home:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+      }
+
+      /* FLOATING LEAVES */
+      .leaf {
+        position: fixed;
+        z-index: 1;
+        pointer-events: none;
+        color: rgba(255, 255, 255, 0.18);
+        animation: floatLeaf 7s ease-in-out infinite;
+      }
+      .leaf-1 {
+        font-size: 2rem;
+        top: 12%;
+        left: 7%;
+        animation-delay: 0s;
+      }
+      .leaf-2 {
+        font-size: 2.5rem;
+        top: 62%;
+        right: 8%;
+        animation-delay: 2.5s;
+      }
+      .leaf-3 {
+        font-size: 3rem;
+        bottom: 18%;
+        left: 16%;
+        animation-delay: 5s;
+      }
+
+      @keyframes floatLeaf {
+        0% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 0;
+        }
+        40% {
+          opacity: 0.9;
+        }
+        100% {
+          transform: translateY(-90px) rotate(22deg);
+          opacity: 0;
+        }
+      }
+
+      /* WRAPPER */
+      .auth-wrapper {
+        position: relative;
+        z-index: 2;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+      }
+
+      /* CARD */
+      .auth-card {
+        width: 100%;
+        max-width: 460px;
+        background: #fff;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 28px 65px rgba(0, 0, 0, 0.38);
+        animation: cardUp 0.55s ease-out both;
+      }
+      @keyframes cardUp {
+        from {
+          opacity: 0;
+          transform: translateY(40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* CARD TOP */
+      .card-top {
+        background: linear-gradient(135deg, var(--green) 0%, var(--teal) 100%);
+        padding: 2.5rem 2rem 2rem;
+        text-align: center;
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+      }
+      .card-top::before {
+        content: "";
+        position: absolute;
+        top: -45px;
+        right: -45px;
+        width: 150px;
+        height: 150px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 50%;
+      }
+      .card-top::after {
+        content: "";
+        position: absolute;
+        bottom: -30px;
+        left: -30px;
+        width: 110px;
+        height: 110px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 50%;
+      }
+      .top-avatar {
+        width: 74px;
+        height: 74px;
+        background: rgba(255, 255, 255, 0.22);
+        border: 3px solid rgba(255, 255, 255, 0.4);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-size: 2.1rem;
+        position: relative;
+        z-index: 1;
+      }
+      .card-top h2 {
+        font-size: 1.85rem;
+        font-weight: 700;
+        margin-bottom: 0.3rem;
+        position: relative;
+        z-index: 1;
+      }
+      .card-top p {
+        opacity: 0.9;
+        font-size: 0.92rem;
+        position: relative;
+        z-index: 1;
+        margin: 0;
+      }
+
+      /* CARD BODY */
+      .card-body {
+        padding: 2.25rem 2rem;
+      }
+
+      /* ALERT */
+      .auth-alert {
+        display: none;
+        align-items: flex-start;
+        gap: 0.5rem;
+        border-radius: 12px;
+        padding: 0.85rem 1rem;
+        font-size: 0.88rem;
+        margin-bottom: 1.25rem;
+        background: #fff5f5;
+        color: #c53030;
+        border: 1px solid #fed7d7;
+      }
+
+      /* LABELS */
+      .field-label {
+        display: block;
+        font-weight: 600;
+        font-size: 0.82rem;
+        color: var(--green);
+        margin-bottom: 0.45rem;
+        letter-spacing: 0.3px;
+      }
+
+      /* INPUT GROUP */
+      .inp-group {
+        position: relative;
+        margin-bottom: 0.4rem;
+      }
+      .inp-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--green);
+        font-size: 0.95rem;
+        z-index: 4;
+        pointer-events: none;
+      }
+      .auth-inp {
+        width: 100%;
+        border: 2px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 0.82rem 2.8rem 0.82rem 2.75rem;
+        font-size: 0.97rem;
+        color: #1a202c;
+        background: #f7fafc;
+        outline: none;
+        transition:
+          border-color 0.25s,
+          box-shadow 0.25s,
+          background 0.25s;
+      }
+      .auth-inp:focus {
+        border-color: var(--green);
+        box-shadow: 0 0 0 0.22rem rgba(25, 135, 84, 0.18);
+        background: #fff;
+      }
+      .auth-inp.is-error {
+        border-color: #e53e3e;
+        background: #fff;
+      }
+      .auth-inp.is-ok {
+        border-color: var(--green);
+        background: #fff;
+      }
+
+      .eye-btn {
+        position: absolute;
+        right: 13px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #718096;
+        cursor: pointer;
+        z-index: 4;
+        font-size: 0.95rem;
+        padding: 0;
+        transition: color 0.2s;
+      }
+      .eye-btn:hover {
+        color: var(--green);
+      }
+
+      .err-msg {
+        display: none;
+        font-size: 0.78rem;
+        color: #e53e3e;
+        margin-top: 0.25rem;
+        padding-left: 0.4rem;
+        margin-bottom: 0.5rem;
+      }
+
+      /* REMEMBER / FORGOT */
+      .row-between {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 0.8rem 0 1.4rem;
+      }
+      .row-between label {
+        font-size: 0.85rem;
+        color: #718096;
+        cursor: pointer;
+      }
+      .form-check-input:checked {
+        background-color: var(--green);
+        border-color: var(--green);
+      }
+      .forgot-link {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--green);
+        text-decoration: none;
+      }
+      .forgot-link:hover {
+        text-decoration: underline;
+      }
+
+      /* SIGN IN BUTTON */
+      .btn-signin {
+        width: 100%;
+        background: linear-gradient(135deg, var(--green) 0%, var(--teal) 100%);
+        border: none;
+        border-radius: 14px;
+        padding: 0.92rem;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #fff;
+        box-shadow: 0 6px 22px rgba(25, 135, 84, 0.32);
+        cursor: pointer;
+        transition:
+          transform 0.25s,
+          box-shadow 0.25s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        margin-bottom: 1.25rem;
+        letter-spacing: 0.3px;
+      }
+      .btn-signin:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 11px 30px rgba(25, 135, 84, 0.44);
+      }
+      .btn-signin:active {
+        transform: translateY(0);
+      }
+      .btn-signin:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      /* INFO BOX */
+      .info-box {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.6rem;
+        background: rgba(25, 135, 84, 0.07);
+        border: 1px solid rgba(25, 135, 84, 0.22);
+        border-radius: 14px;
+        padding: 0.9rem 1.1rem;
+        font-size: 0.83rem;
+        color: #276749;
+        margin-bottom: 1.25rem;
+      }
+      .info-box i {
+        margin-top: 0.15rem;
+        flex-shrink: 0;
+      }
+
+      /* DIVIDER */
+      .divider {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.8rem;
+        color: #a0aec0;
+        margin: 1.1rem 0;
+      }
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #e2e8f0;
+      }
+
+      .bottom-link {
+        text-align: center;
+        font-size: 0.87rem;
+        color: #718096;
+      }
+      .bottom-link a {
+        color: var(--green);
+        font-weight: 700;
+        text-decoration: none;
+        margin-left: 0.25rem;
+      }
+      .bottom-link a:hover {
+        text-decoration: underline;
+      }
+
+      /* FOOTER */
+      .auth-footer {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        padding: 1.1rem;
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.65);
+      }
+
+      @media (max-width: 480px) {
+        .card-body {
+          padding: 1.75rem 1.25rem;
+        }
+        .card-top {
+          padding: 2rem 1.25rem 1.5rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Floating leaves -->
+    <div class="leaf leaf-1"><i class="fas fa-leaf"></i></div>
+    <div class="leaf leaf-2"><i class="fas fa-leaf"></i></div>
+    <div class="leaf leaf-3"><i class="fas fa-seedling"></i></div>
+
+    <!-- NAVBAR -->
+    <nav class="auth-nav">
+      <a href="index.html" class="nav-brand">
+        <i class="fas fa-leaf"></i> Soybean AI
+      </a>
+      <a href="index.html" class="nav-home">
+        <i class="fas fa-home me-1"></i> Home
+      </a>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="auth-wrapper">
+      <div class="auth-card">
+        <!-- Card Header -->
+        <div class="card-top">
+          <div class="top-avatar"><i class="fas fa-user-shield"></i></div>
+          <h2>Welcome Back</h2>
+          <p>Sign in to your Soybean AI account</p>
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body">
+          <!-- Error Alert -->
+          <div class="auth-alert" id="loginAlert">
+            <i class="fas fa-exclamation-circle"></i>
+            <span id="alertMsg">Invalid email or password.</span>
+          </div>
+
+          <!-- Email Field -->
+          <label class="field-label" for="loginEmail">
+            <i class="fas fa-envelope me-1"></i> Email Address
+          </label>
+          <div class="inp-group">
+            <i class="inp-icon fas fa-envelope"></i>
+            <input
+              type="email"
+              id="loginEmail"
+              class="auth-inp"
+              placeholder="you@example.com"
+              autocomplete="email"
+            />
+          </div>
+          <div class="err-msg" id="loginEmailErr">
+            <i class="fas fa-circle-exclamation me-1"></i><span></span>
+          </div>
+
+          <!-- Password Field -->
+          <label class="field-label" for="loginPassword">
+            <i class="fas fa-lock me-1"></i> Password
+          </label>
+          <div class="inp-group">
+            <i class="inp-icon fas fa-lock"></i>
+            <input
+              type="password"
+              id="loginPassword"
+              class="auth-inp"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+            />
+            <button class="eye-btn" type="button" id="eyeBtn">
+              <i class="fas fa-eye" id="eyeIcon"></i>
+            </button>
+          </div>
+          <div class="err-msg" id="loginPasswordErr">
+            <i class="fas fa-circle-exclamation me-1"></i><span></span>
+          </div>
+
+          <!-- Remember Me + Forgot Password -->
+          <div class="row-between">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="rememberMe" />
+              <label class="form-check-label" for="rememberMe"
+                >Remember me</label
+              >
+            </div>
+            <a href="#" class="forgot-link" id="forgotBtn">Forgot password?</a>
+          </div>
+
+          <!-- ✅ SIGN IN BUTTON — onclick directly calls doLogin() -->
+          <button
+            class="btn-signin"
+            id="signInBtn"
+            type="button"
+            onclick="doLogin()"
+          >
+            <i class="fas fa-sign-in-alt" id="btnIcon"></i>
+            <span id="btnText">Sign In</span>
+          </button>
+
+          <!-- Info Box -->
+          <div class="info-box">
+            <i class="fas fa-shield-halved"></i>
+            <div>
+              <strong>Restricted System.</strong>
+              Only authorized users can sign in. Contact admin at
+              <a
+                href="mailto:contact@soybeanai.edu"
+                style="color: var(--green); font-weight: 600"
+              >
+                contact@soybeanai.edu
+              </a>
+              if you need access.
+            </div>
+          </div>
+
+          <div class="divider">or</div>
+
+          <div class="bottom-link">
+            Don't have an account?
+            <a href="signup.html">Create Account</a>
+          </div>
+        </div>
+        <!-- /card-body -->
+      </div>
+      <!-- /auth-card -->
+    </div>
+    <!-- /auth-wrapper -->
+
+    <footer class="auth-footer">
+      &copy; 2024 Soybean AI &nbsp;·&nbsp; Final Year Project &nbsp;·&nbsp;
+      Department of Computer Science
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      // LOGIN.HTML
+      /* ================================================================
+         AUTHORIZED USERS LIST
+         Add / remove users here.
+         - email    : case-insensitive when matching
+         - password : case-SENSITIVE when matching
+         ================================================================ */
+      var USERS = [
+        {
+          email: "admin@soybeanai.edu",
+          password: "Admin@123",
+          name: "Admin",
+          role: "Administrator",
+        },
+        {
+          email: "researcher@soybeanai.edu",
+          password: "Research@1",
+          name: "Researcher",
+          role: "Researcher",
+        },
+        {
+          email: "farmer@soybeanai.edu",
+          password: "Farmer@123",
+          name: "Farmer User",
+          role: "Farmer",
+        },
+        /* To add a new user, copy one line above and change the values:
+        ,{ email: "yourname@gmail.com", password: "YourPass1", name: "Your Name", role: "Researcher" }
+        */
+      ];
+      /* ================================================================ */
+
+      /* ── Show / Hide password toggle ── */
+      document.getElementById("eyeBtn").onclick = function () {
+        var inp = document.getElementById("loginPassword");
+        var icon = document.getElementById("eyeIcon");
+        if (inp.type === "password") {
+          inp.type = "text";
+          icon.className = "fas fa-eye-slash";
+        } else {
+          inp.type = "password";
+          icon.className = "fas fa-eye";
+        }
+      };
+
+      /* ── Show field error ── */
+      function fieldError(inputId, errId, msg) {
+        document.getElementById(inputId).classList.add("is-error");
+        document.getElementById(inputId).classList.remove("is-ok");
+        var el = document.getElementById(errId);
+        el.querySelector("span").textContent = msg;
+        el.style.display = "block";
+      }
+
+      /* ── Clear field error ── */
+      function fieldClear(inputId, errId) {
+        document.getElementById(inputId).classList.remove("is-error", "is-ok");
+        document.getElementById(errId).style.display = "none";
+      }
+
+      /* ── Mark field as OK ── */
+      function fieldOk(inputId, errId) {
+        document.getElementById(inputId).classList.remove("is-error");
+        document.getElementById(inputId).classList.add("is-ok");
+        document.getElementById(errId).style.display = "none";
+      }
+
+      /* ── Show top alert ── */
+      function showAlert(msg) {
+        document.getElementById("alertMsg").textContent = msg;
+        document.getElementById("loginAlert").style.display = "flex";
+      }
+
+      /* ── Hide top alert ── */
+      function hideAlert() {
+        document.getElementById("loginAlert").style.display = "none";
+      }
+
+      /* ── Auto clear errors on typing ── */
+      document.getElementById("loginEmail").oninput = function () {
+        fieldClear("loginEmail", "loginEmailErr");
+        hideAlert();
+      };
+      document.getElementById("loginPassword").oninput = function () {
+        fieldClear("loginPassword", "loginPasswordErr");
+        hideAlert();
+      };
+
+      /* ================================================================
+         MAIN LOGIN FUNCTION  —  called by button onclick="doLogin()"
+         ================================================================ */
+      function doLogin() {
+        hideAlert();
+
+        var emailVal = document.getElementById("loginEmail").value.trim();
+        var passVal = document.getElementById("loginPassword").value;
+
+        /* --- Step 1: Validate inputs are not empty --- */
+        var isValid = true;
+
+        if (emailVal === "") {
+          fieldError(
+            "loginEmail",
+            "loginEmailErr",
+            "Please enter your email address.",
+          );
+          isValid = false;
+        } else if (
+          emailVal.indexOf("@") === -1 ||
+          emailVal.indexOf(".") === -1
+        ) {
+          fieldError(
+            "loginEmail",
+            "loginEmailErr",
+            "Please enter a valid email address.",
+          );
+          isValid = false;
+        } else {
+          fieldOk("loginEmail", "loginEmailErr");
+        }
+
+        if (passVal === "") {
+          fieldError(
+            "loginPassword",
+            "loginPasswordErr",
+            "Please enter your password.",
+          );
+          isValid = false;
+        } else {
+          fieldOk("loginPassword", "loginPasswordErr");
+        }
+
+        if (!isValid) return; /* stop here if validation failed */
+
+        /* --- Step 2: Show loading spinner on button --- */
+        var btn = document.getElementById("signInBtn");
+        btn.disabled = true;
+        document.getElementById("btnIcon").className = "fas fa-spinner fa-spin";
+        document.getElementById("btnText").textContent = "Signing in…";
+
+        /* --- Step 3: Check against USERS list (small delay for UX) --- */
+        setTimeout(function () {
+          var emailLower = emailVal.toLowerCase();
+          var found = null;
+
+          for (var i = 0; i < USERS.length; i++) {
+            if (
+              USERS[i].email.toLowerCase() === emailLower &&
+              USERS[i].password === passVal
+            ) {
+              found = USERS[i];
+              break;
+            }
+          }
+
+          if (found !== null) {
+            /* ✅ LOGIN SUCCESS */
+            sessionStorage.setItem(
+              "soybean_user",
+              JSON.stringify({
+                name: found.name,
+                email: found.email,
+                role: found.role,
+              }),
+            );
+
+            /* Save email if Remember Me is checked */
+            if (document.getElementById("rememberMe").checked) {
+              localStorage.setItem("soybean_remember", emailLower);
+            } else {
+              localStorage.removeItem("soybean_remember");
+            }
+
+            /* Change button to success style */
+            btn.style.background = "linear-gradient(135deg, #155724, #28a745)";
+            document.getElementById("btnIcon").className =
+              "fas fa-check-circle";
+            document.getElementById("btnText").textContent =
+              "Success! Opening…";
+
+            /* Redirect to index.html */
+            setTimeout(function () {
+              window.location.href = "index.html";
+            }, 800);
+          } else {
+            /* ❌ LOGIN FAILED */
+            btn.disabled = false;
+            btn.style.background = "";
+            document.getElementById("btnIcon").className = "fas fa-sign-in-alt";
+            document.getElementById("btnText").textContent = "Sign In";
+
+            /* Check if email exists to give better message */
+            var emailExists = false;
+            for (var j = 0; j < USERS.length; j++) {
+              if (USERS[j].email.toLowerCase() === emailLower) {
+                emailExists = true;
+                break;
+              }
+            }
+
+            if (emailExists) {
+              showAlert("Wrong password. Please try again.");
+              fieldError(
+                "loginPassword",
+                "loginPasswordErr",
+                "Incorrect password.",
+              );
+              document.getElementById("loginPassword").value = "";
+              document.getElementById("loginPassword").focus();
+            } else {
+              showAlert("This email is not authorized to access the system.");
+              fieldError("loginEmail", "loginEmailErr", "Email not found.");
+            }
+          }
+        }, 900);
+      } /* end doLogin */
+
+      /* ── Enter key also triggers login ── */
+      document.onkeydown = function (e) {
+        if (e.key === "Enter") {
+          var btn = document.getElementById("signInBtn");
+          if (!btn.disabled) doLogin();
+        }
+      };
+
+      /* ── Forgot password button ── */
+      document.getElementById("forgotBtn").onclick = function (e) {
+        e.preventDefault();
+        var email = document.getElementById("loginEmail").value.trim();
+        if (!email) {
+          showAlert(
+            "Enter your email address first, then click Forgot Password.",
+          );
+          document.getElementById("loginEmail").focus();
+          return;
+        }
+        alert(
+          "A reset link would be sent to:\n" +
+            email +
+            "\n\n(Needs backend to work fully.)",
+        );
+      };
+
+      /* ── On page load: pre-fill remembered email, redirect if logged in ── */
+      window.onload = function () {
+        var remembered = localStorage.getItem("soybean_remember");
+        if (remembered) {
+          document.getElementById("loginEmail").value = remembered;
+          document.getElementById("rememberMe").checked = true;
+        }
+        if (sessionStorage.getItem("soybean_user")) {
+          window.location.href = "index.html";
+        }
+      };
+    </script>
+  </body>
+</html>

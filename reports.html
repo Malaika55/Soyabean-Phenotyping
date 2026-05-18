@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reports – Soybean AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .report-card { border-radius:18px; border:1px solid #e2e8f0; transition:all .3s ease; }
+    .report-card:hover { transform:translateY(-5px); box-shadow:0 15px 35px rgba(25,135,84,.15); border-color:#198754; }
+    .report-icon { width:56px;height:56px; border-radius:14px; display:flex;align-items:center;justify-content:center; font-size:1.4rem; }
+    .ri-green  { background:rgba(25,135,84,.12); color:#198754; }
+    .ri-teal   { background:rgba(32,201,151,.12); color:#20c997; }
+    .ri-yellow { background:rgba(255,193,7,.15);  color:#d4a00a; }
+    .ri-blue   { background:rgba(13,110,253,.1);  color:#0d6efd; }
+    .stat-card { border-radius:16px; border:none; }
+    .download-btn { border-radius:50px; font-size:.85rem; padding:.4rem 1.1rem; }
+    .section-badge { background:rgba(25,135,84,.12); color:#198754; border:1px solid rgba(25,135,84,.25); border-radius:50px; padding:.35rem 1rem; font-size:.82rem; font-weight:600; display:inline-block; margin-bottom:.75rem; }
+    .filter-btn { border-radius:50px; font-size:.85rem; border:1.5px solid #e2e8f0; }
+    .filter-btn.active, .filter-btn:hover { background:#198754; color:#fff; border-color:#198754; }
+    .progress { height:8px; border-radius:10px; }
+    .chart-wrap { background:#fff; border-radius:20px; box-shadow:0 8px 30px rgba(0,0,0,.08); padding:1.5rem; }
+    .status-dot { width:10px;height:10px; border-radius:50%; display:inline-block; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-md navbar-dark sticky-top custom-navbar">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html"><img src="images/Capture.PNG" alt="Logo" class="pill-rounded" style="height:50px;" /></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu"><span class="navbar-toggler-icon"></span></button>
+    <div class="d-none d-md-flex w-100 align-items-center">
+      <ul class="navbar-nav d-flex mx-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="upload.html">Upload</a></li>
+        <li class="nav-item"><a class="nav-link" href="comparison.html">Comparison</a></li>
+        <li class="nav-item"><a class="nav-link active" href="reports.html">Reports</a></li>
+        <li class="nav-item"><a class="nav-link" href="growth3d.html">3D Growth</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+      </ul>
+      <form class="d-flex ms-auto"><input class="form-control me-2" type="search" placeholder="Search" /><button class="btn btn-outline-light">Search</button></form>
+    </div>
+  </div>
+</nav>
+<div class="offcanvas offcanvas-end text-bg-success" tabindex="-1" id="mobileMenu">
+  <div class="offcanvas-header"><h5 class="offcanvas-title">Menu</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button></div>
+  <div class="offcanvas-body">
+    <ul class="navbar-nav">
+      <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+      <li class="nav-item"><a class="nav-link" href="upload.html">Upload</a></li>
+      <li class="nav-item"><a class="nav-link" href="comparison.html">Comparison</a></li>
+      <li class="nav-item"><a class="nav-link active" href="reports.html">Reports</a></li>
+      <li class="nav-item"><a class="nav-link" href="growth3d.html">3D Growth</a></li>
+      <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+      <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+    </ul>
+  </div>
+</div>
+
+<!-- PAGE HEADER -->
+<section style="min-height:280px; background:linear-gradient(135deg,#198754 0%,#0d6b3f 100%); position:relative; overflow:hidden;" class="d-flex align-items-center">
+  <div class="floating-leaf leaf-1"><i class="fas fa-leaf"></i></div>
+  <div class="floating-leaf leaf-2"><i class="fas fa-leaf"></i></div>
+  <div class="container text-white text-center position-relative" style="z-index:2;">
+    <div class="section-badge" style="background:rgba(255,255,255,.2);color:#fff;border-color:rgba(255,255,255,.3);">
+      <i class="fas fa-file-alt me-2"></i>Analytics & Reports
+    </div>
+    <h1 class="display-4 fw-bold mb-3">Analysis Reports</h1>
+    <p class="lead opacity-90 mb-0">View, filter and download detailed soybean analysis reports</p>
+  </div>
+</section>
+
+<!-- STATS STRIP -->
+<section class="py-4" style="background:#f8f9fa;">
+  <div class="container">
+    <div class="row g-3">
+      <div class="col-6 col-md-3">
+        <div class="stat-card card bg-white shadow-sm p-3 text-center">
+          <div class="fs-3 fw-bold text-success">1,240</div>
+          <div class="text-muted small">Total Reports</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card card bg-white shadow-sm p-3 text-center">
+          <div class="fs-3 fw-bold text-success">850</div>
+          <div class="text-muted small">Healthy Plants</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card card bg-white shadow-sm p-3 text-center">
+          <div class="fs-3 fw-bold text-warning">280</div>
+          <div class="text-muted small">Moderate Cases</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card card bg-white shadow-sm p-3 text-center">
+          <div class="fs-3 fw-bold text-danger">110</div>
+          <div class="text-muted small">Diseased Plants</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHARTS ROW -->
+<section class="py-5 bg-white">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="chart-wrap h-100">
+          <h5 class="fw-bold text-success mb-3"><i class="fas fa-chart-pie me-2"></i>Health Distribution</h5>
+          <canvas id="pieChart"></canvas>
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <div class="chart-wrap h-100">
+          <h5 class="fw-bold text-success mb-3"><i class="fas fa-chart-line me-2"></i>Monthly Analysis Trend</h5>
+          <canvas id="lineChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REPORTS TABLE -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="d-flex flex-wrap align-items-center justify-content-between mb-4 gap-3">
+      <div>
+        <div class="section-badge"><i class="fas fa-list me-1"></i>All Reports</div>
+        <h2 class="fw-bold text-success mb-0">Report History</h2>
+      </div>
+      <div class="d-flex gap-2 flex-wrap">
+        <button class="btn filter-btn active" onclick="filterReports('all',this)">All</button>
+        <button class="btn filter-btn" onclick="filterReports('Healthy',this)">Healthy</button>
+        <button class="btn filter-btn" onclick="filterReports('Moderate',this)">Moderate</button>
+        <button class="btn filter-btn" onclick="filterReports('Diseased',this)">Diseased</button>
+        <button class="btn btn-success rounded-pill px-3" onclick="downloadAll()">
+          <i class="fas fa-download me-2"></i>Export CSV
+        </button>
+      </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead style="background:linear-gradient(135deg,#198754,#20c997);" class="text-white">
+              <tr>
+                <th class="ps-4 py-3">Report ID</th>
+                <th>Variety</th>
+                <th>Growth Stage</th>
+                <th>Health Status</th>
+                <th>Confidence</th>
+                <th>Date</th>
+                <th class="pe-4 text-end">Download</th>
+              </tr>
+            </thead>
+            <tbody id="reportsTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="d-flex justify-content-between align-items-center mt-3">
+      <div class="text-muted small" id="showingText">Showing 1–10 of 1,240</div>
+      <nav><ul class="pagination pagination-sm mb-0" id="pagination"></ul></nav>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer-section">
+  <div class="container">
+    <div class="footer-bottom py-4">
+      <div class="row align-items-center">
+        <div class="col-md-6 text-center text-md-start">
+          <p class="mb-0 text-muted">&copy; 2024 Soybean AI. All Rights Reserved.</p>
+        </div>
+        <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
+          <a href="index.html" class="footer-link">Home</a>
+          <span class="mx-2 text-muted">|</span>
+          <a href="contact.html" class="footer-link">Contact</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  /* ── Charts ── */
+  new Chart(document.getElementById('pieChart'), {
+    type:'doughnut',
+    data:{ labels:['Healthy','Moderate','Diseased'], datasets:[{ data:[850,280,110], backgroundColor:['#198754','#ffc107','#dc3545'], borderWidth:0 }] },
+    options:{ responsive:true, plugins:{ legend:{ position:'bottom' } } }
+  });
+  new Chart(document.getElementById('lineChart'), {
+    type:'line',
+    data:{
+      labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug'],
+      datasets:[
+        { label:'Healthy',  data:[60,72,80,95,110,130,145,158], borderColor:'#198754', backgroundColor:'rgba(25,135,84,.1)', tension:.4, fill:true },
+        { label:'Moderate', data:[20,28,30,35,40,38,42,45],     borderColor:'#ffc107', backgroundColor:'rgba(255,193,7,.1)',  tension:.4, fill:true },
+        { label:'Diseased', data:[10,12,15,10,8,12,10,9],       borderColor:'#dc3545', backgroundColor:'rgba(220,53,69,.1)', tension:.4, fill:true }
+      ]
+    },
+    options:{ responsive:true, plugins:{ legend:{ position:'bottom' } }, scales:{ y:{ beginAtZero:true } } }
+  });
+
+  /* ── Report data ── */
+  const varieties   = ['Williams 82','Forrest','Braxton','Davis','Hutcheson'];
+  const stages      = ['R1 (Flowering)','R2 (Full Bloom)','R3 (Pod Dev)','R4 (Pod Fill)','R5 (Seed Fill)','R6 (Full Seed)','R7 (Maturity)'];
+  const healthData  = [
+    { status:'Healthy',  badge:'success', icon:'check-circle' },
+    { status:'Moderate', badge:'warning', icon:'exclamation-circle' },
+    { status:'Diseased', badge:'danger',  icon:'bug' }
+  ];
+
+  let allReports = [];
+  for (let i = 1; i <= 50; i++) {
+    const h = healthData[Math.floor(Math.random()*3)];
+    allReports.push({
+      id: '#SB-2024-' + String(i).padStart(3,'0'),
+      variety: varieties[Math.floor(Math.random()*5)],
+      stage: stages[Math.floor(Math.random()*7)],
+      status: h.status, badge: h.badge, icon: h.icon,
+      confidence: (85 + Math.floor(Math.random()*15)) + '%',
+      date: '2024-0' + (Math.floor(Math.random()*9)+1) + '-' + String(Math.floor(Math.random()*28)+1).padStart(2,'0')
+    });
+  }
+
+  let filtered = [...allReports];
+  let currentPage = 1;
+  const perPage = 10;
+
+  function filterReports(status, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filtered = status === 'all' ? [...allReports] : allReports.filter(r => r.status === status);
+    currentPage = 1;
+    renderTable();
+  }
+
+  function renderTable() {
+    const start = (currentPage-1)*perPage;
+    const page  = filtered.slice(start, start+perPage);
+    document.getElementById('showingText').textContent = 'Showing ' + (start+1) + '–' + Math.min(start+perPage, filtered.length) + ' of ' + filtered.length;
+
+    document.getElementById('reportsTable').innerHTML = page.map(r => `
+      <tr>
+        <td class="ps-4 fw-bold text-success">${r.id}</td>
+        <td>${r.variety}</td>
+        <td><span class="badge bg-secondary">${r.stage}</span></td>
+        <td><i class="fas fa-${r.icon} text-${r.badge} me-2"></i><span class="text-${r.badge} fw-bold">${r.status}</span></td>
+        <td>
+          <div class="progress" style="width:80px;">
+            <div class="progress-bar bg-${r.badge}" style="width:${r.confidence}"></div>
+          </div>
+          <small class="text-muted">${r.confidence}</small>
+        </td>
+        <td>${r.date}</td>
+        <td class="pe-4 text-end">
+          <button class="btn btn-sm btn-outline-success download-btn" onclick="downloadReport('${r.id}')">
+            <i class="fas fa-download me-1"></i>PDF
+          </button>
+        </td>
+      </tr>`).join('');
+
+    /* pagination */
+    const totalPages = Math.ceil(filtered.length/perPage);
+    let pag = '';
+    for (let i = 1; i <= Math.min(totalPages,5); i++) {
+      pag += `<li class="page-item ${i===currentPage?'active':''}"><a class="page-link" href="#" onclick="goPage(${i});return false;">${i}</a></li>`;
+    }
+    document.getElementById('pagination').innerHTML =
+      `<li class="page-item ${currentPage===1?'disabled':''}"><a class="page-link" href="#" onclick="goPage(${currentPage-1});return false;">Prev</a></li>` +
+      pag +
+      `<li class="page-item ${currentPage===totalPages?'disabled':''}"><a class="page-link" href="#" onclick="goPage(${currentPage+1});return false;">Next</a></li>`;
+  }
+
+  function goPage(p) {
+    const totalPages = Math.ceil(filtered.length/perPage);
+    if (p < 1 || p > totalPages) return;
+    currentPage = p;
+    renderTable();
+  }
+
+  function downloadReport(id) {
+    alert('Downloading report ' + id + '...\n(PDF export requires backend integration.)');
+  }
+
+  function downloadAll() {
+    const csv = ['ID,Variety,Stage,Status,Confidence,Date']
+      .concat(allReports.map(r => `${r.id},${r.variety},${r.stage},${r.status},${r.confidence},${r.date}`))
+      .join('\n');
+    const a = document.createElement('a');
+    a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+    a.download = 'soybean_reports.csv';
+    a.click();
+  }
+
+  renderTable();
+</script>
+</body>
+</html>

@@ -1,8 +1,13 @@
-// Scroll shadow
+// ===============================
+// LOGIN CHECK
+// ===============================
 if (!sessionStorage.getItem("soybean_user")) {
   window.location.href = "login.html";
 }
 
+// ===============================
+// NAVBAR SCROLL EFFECT
+// ===============================
 window.addEventListener("scroll", function () {
   const navbar = document.querySelector(".custom-navbar");
   if (navbar) {
@@ -10,16 +15,43 @@ window.addEventListener("scroll", function () {
   }
 });
 
-// Dynamic active link
-const navLinks = document.querySelectorAll(".navbar .nav-link");
-navLinks.forEach((link) => {
+// ===============================
+// AUTO ACTIVE LINK (FIXED MAIN ISSUE)
+// ===============================
+function setActiveLink() {
+  const currentPage = window.location.pathname.split("/").pop() || "index.html";
+
+  const allLinks = document.querySelectorAll(".nav-link");
+
+  allLinks.forEach((link) => {
+    const linkPage = link.getAttribute("href");
+
+    // remove previous active
+    link.classList.remove("active");
+
+    // match current page
+    if (linkPage === currentPage) {
+      link.classList.add("active");
+    }
+  });
+}
+
+// Run on page load
+setActiveLink();
+
+// ===============================
+// CLICK HANDLING (FOR UI FEEDBACK ONLY)
+// ===============================
+document.querySelectorAll(".nav-link").forEach((link) => {
   link.addEventListener("click", function () {
-    navLinks.forEach((l) => l.classList.remove("active"));
+    document.querySelectorAll(".nav-link").forEach((l) => l.classList.remove("active"));
     this.classList.add("active");
 
+    // close mobile menu if open
     const offcanvas = document.querySelector("#mobileMenu");
     if (offcanvas && offcanvas.classList.contains("show")) {
-      bootstrap.Offcanvas.getInstance(offcanvas).hide();
+      const instance = bootstrap.Offcanvas.getInstance(offcanvas);
+      if (instance) instance.hide();
     }
   });
 });
